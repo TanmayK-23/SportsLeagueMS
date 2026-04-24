@@ -1,0 +1,252 @@
+{% extends "layout.html" %}
+
+{% block title %}Register Player — SLMS{% endblock %}
+
+{% block head %}
+<style>
+/* Full-width side-by-side layout, no max-width constraint */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: calc(100vh - 60px - 97px); /* subtract navbar + footer */
+}
+
+/* ─── LEFT PANEL ─── */
+.left {
+    padding: 80px 72px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.left h1 {
+    font-size: 72px;
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: -1px;
+    min-height: 78px;
+    margin-bottom: 24px;
+}
+
+.left p {
+    font-size: 21px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    letter-spacing: 0.2px;
+    margin-bottom: 40px;
+}
+
+.info-block {
+    padding: 26px 28px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    font-size: 18px;
+    color: var(--text-secondary);
+    line-height: 1.9;
+}
+
+.info-block strong {
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 12px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* ─── RIGHT PANEL ─── */
+.right {
+    padding: 80px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* ─── FORM CARD ─── */
+.form-card {
+    padding: 48px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.09);
+    box-shadow:
+        0 16px 48px rgba(0,0,0,0.5),
+        0 1px 0 rgba(255,255,255,0.07) inset,
+        rgb(27,28,30) 0px 0px 0px 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Top-edge glass highlight */
+.form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+    pointer-events: none;
+}
+
+.form-card h2 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0px;
+    margin-bottom: 32px;
+    color: var(--text-primary);
+}
+
+/* ─── FIELDS ─── */
+.field {
+    margin-bottom: 24px;
+}
+
+.field label {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+    margin-bottom: 9px;
+}
+
+.field select.form-input {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239c9c9d' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* ─── SUBMIT ─── */
+.submit-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 18px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.07);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    box-shadow: var(--shadow-btn);
+    transition: opacity 0.2s;
+}
+.submit-btn:hover { opacity: 0.65; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- LEFT PANEL -->
+    <div class="left">
+        <h1 id="type-text-player" class="typewriter"></h1>
+        <p>Add new players into the system. Player data is stored with sport, position, and country information.</p>
+
+        <div class="info-block">
+            <strong>Supported Positions</strong>
+            Cricket — WK-Batsman, Bowler, Batsman, All-rounder<br>
+            Football — Goalkeeper, Center-back, Full-back, Midfielder, Striker, Winger
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right">
+        <div class="form-card">
+            <h2>Player Details</h2>
+            <form action="/insert_player" method="post" id="registerForm">
+
+                <div class="field">
+                    <label for="player_name">Player Name</label>
+                    <input class="form-input" id="player_name" type="text" name="player_name" placeholder="e.g. Virat Kohli" required autocomplete="off">
+                </div>
+
+                <div class="field">
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input class="form-input" id="date_of_birth" type="date" name="date_of_birth" required>
+                </div>
+
+                <div class="field-row">
+                    <div class="field" style="margin-bottom:0">
+                        <label for="country_id">Country</label>
+                        <select class="form-input" id="country_id" name="country_id" required>
+                            <option value="">Select Country</option>
+                            {% for c in countries %}
+                                <option value="{{ c[0] }}">{{ c[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field" style="margin-bottom:0">
+                        <label for="sportSelect">Sport</label>
+                        <select class="form-input" id="sportSelect">
+                            <option value="">Select Sport</option>
+                            <option value="cricket">Cricket</option>
+                            <option value="football">Football</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field" style="margin-top:20px">
+                    <label for="positionSelect">Position</label>
+                    <select class="form-input" id="positionSelect" name="position" required>
+                        <option value="">Select a sport first</option>
+                    </select>
+                </div>
+
+                <button class="submit-btn" type="submit">Register Player</button>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+/* ── Typewriter ── */
+const textPlayer   = "REGISTER PLAYER";
+let   idxPlayer    = 0;
+const targetPlayer = document.getElementById("type-text-player");
+(function type() {
+    if (idxPlayer < textPlayer.length) {
+        targetPlayer.textContent += textPlayer.charAt(idxPlayer++);
+        setTimeout(type, 50);
+    }
+})();
+
+/* ── Sport → Position mapping ── */
+const sportSelect    = document.getElementById("sportSelect");
+const positionSelect = document.getElementById("positionSelect");
+
+const positions = {
+    cricket:  ["WK-Batsman", "Bowler", "Batsman", "All-rounder"],
+    football: ["Goalkeeper", "Center-back", "Full-back", "Midfielder", "Striker", "Winger"]
+};
+
+sportSelect.addEventListener("change", function () {
+    const opts = positions[this.value] || [];
+    positionSelect.innerHTML = `<option value="">${opts.length ? 'Select Position' : 'Select a sport first'}</option>`;
+    opts.forEach(p => {
+        const o = document.createElement("option");
+        o.value = o.textContent = p;
+        positionSelect.appendChild(o);
+    });
+});
+</script>
+{% endblock %}

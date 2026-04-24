@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sports League Management System — manage players, teams, and matches.">
+<title>{% block title %}SLMS{% endblock %}</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ─── DESIGN TOKENS (DESIGN.md — Raycast Design System) ─────────────────── */
+:root {
+    --bg:            #07080a;
+    --surface:       #101111;
+    --surface-card:  #1b1c1e;
+    --border:        rgba(255,255,255,0.06);
+    --border-strong: rgba(255,255,255,0.10);
+    --text-primary:  #f9f9f9;
+    --text-secondary:#9c9c9d;
+    --text-dim:      #6a6b6c;
+    --accent-red:    #FF6363;
+    --accent-blue:   hsl(202,100%,67%);
+    --accent-green:  hsl(151,59%,59%);
+    --shadow-ring:   rgb(27,28,30) 0px 0px 0px 1px, rgb(7,8,10) 0px 0px 0px 1px inset;
+    --shadow-btn:    rgba(255,255,255,0.05) 0px 1px 0px 0px inset, rgba(0,0,0,0.20) 0px -1px 0px 0px inset;
+
+    /* Glassmorphism tokens */
+    --glass-bg:      rgba(255,255,255,0.04);
+    --glass-border:  rgba(255,255,255,0.09);
+    --glass-blur:    blur(20px);
+    --glass-shadow:  0 8px 32px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.06) inset;
+    --glass-header:  rgba(255,255,255,0.07);
+}
+
+/* ─── RESET ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── BASE ───────────────────────────────────────────────────────────────── */
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: 'calt', 'kern', 'liga', 'ss03';
+    letter-spacing: 0.2px;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    /* Subtle radial mesh to make glassmorphism pop */
+    background-image:
+        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(85,179,255,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 110%, rgba(255,99,99,0.05) 0%, transparent 60%);
+}
+
+/* ─── NAVBAR ─────────────────────────────────────────────────────────────── */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    height: 60px;
+    background: rgba(7,8,10,0.80);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+}
+
+.navbar-brand {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: 0.3px;
+    padding: 7px 16px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.05);
+}
+
+.nav-links a.active {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.07);
+}
+
+/* ─── GLASSMORPHISM CARD ─────────────────────────────────────────────────── */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
+    overflow: hidden;
+}
+
+/* ─── GLASSMORPHISM TABLE ────────────────────────────────────────────────── */
+.glass-table-wrap {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Subtle top-edge highlight */
+.glass-table-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+    pointer-events: none;
+}
+
+.glass-table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.glass-table-wrap thead th {
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: var(--glass-header);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.glass-table-wrap tbody td {
+    padding: 18px 24px;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text-primary);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.glass-table-wrap tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.glass-table-wrap tbody tr {
+    transition: background 0.18s ease;
+}
+
+.glass-table-wrap tbody tr:hover td {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Sport badge in table */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    background: var(--surface-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+.badge.blue { background: rgba(85,179,255,0.12); color: var(--accent-blue); border-color: rgba(85,179,255,0.2); }
+.badge.green { background: rgba(95,201,146,0.12); color: var(--accent-green); border-color: rgba(95,201,146,0.2); }
+
+/* ─── FORM INPUTS ────────────────────────────────────────────────────────── */
+.form-input {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 500;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input::placeholder { color: var(--text-dim); }
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(85,179,255,0.12);
+}
+
+/* ─── BUTTONS ────────────────────────────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: transparent;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: var(--shadow-btn);
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+.btn:hover { opacity: 0.65; }
+
+.btn-primary {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.14);
+}
+
+/* ─── PAGE FADE-IN ───────────────────────────────────────────────────────── */
+.page-content {
+    animation: fadeUp 0.45s ease both;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── FOOTER ─────────────────────────────────────────────────────────────── */
+.footer {
+    text-align: center;
+    padding: 28px 40px;
+    color: var(--text-dim);
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+}
+
+/* ─── UTILS ──────────────────────────────────────────────────────────────── */
+.section-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+</style>
+
+{% block head %}{% endblock %}
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a class="navbar-brand" href="/">SLMS</a>
+    <div class="nav-links">
+        <a href="/" {% if active_page == 'home' %}class="active"{% endif %}>Home</a>
+        <a href="/player" {% if active_page == 'player' %}class="active"{% endif %}>Register</a>
+        <a href="/view_players" {% if active_page == 'players' %}class="active"{% endif %}>Players</a>
+    </div>
+</nav>
+
+<div class="page-content">
+{% block content %}{% endblock %}
+</div>
+
+<div class="footer">
+    DBMS Mini Project &nbsp;•&nbsp; Global Sports League &nbsp;•&nbsp; 2026
+</div>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

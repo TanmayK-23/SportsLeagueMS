@@ -1,0 +1,302 @@
+{% extends "layout.html" %}
+
+{% block title %}Player Database — SLMS{% endblock %}
+
+{% block head %}
+<style>
+/* Full-width container, no centering */
+.container {
+    padding: 52px 60px 40px;
+}
+
+h1.page-heading {
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: 0px;
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    letter-spacing: 0.2px;
+}
+
+/* ─── CONTROLS ─── */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 36px;
+    align-items: center;
+}
+
+.controls .form-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.controls select.form-input {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239c9c9d' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.controls .btn { flex-shrink: 0; }
+
+/* ─── TABLE SECTIONS ─── */
+.table-section {
+    margin-bottom: 48px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 52px 20px;
+    color: var(--text-dim);
+    font-size: 17px;
+}
+
+/* ID col — muted */
+.glass-table-wrap tbody td:first-child {
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.country-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+/* Live row-count chip */
+.row-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 7px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--surface-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    margin-left: 8px;
+    vertical-align: middle;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-heading typewriter" id="type-text-view"></h1>
+    <p class="page-subtitle">Browse and filter registered cricket and football players.</p>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+        <input class="form-input" type="text" id="searchInput" placeholder="Search players…" autocomplete="off">
+
+        <select class="form-input" id="cricketFilter">
+            <option value="">Cricket — All Roles</option>
+            <option value="WK-Batsman">WK-Batsman</option>
+            <option value="Bowler">Bowler</option>
+            <option value="Batsman">Batsman</option>
+            <option value="All-rounder">All-rounder</option>
+        </select>
+
+        <select class="form-input" id="footballFilter">
+            <option value="">Football — All Roles</option>
+            <option value="Goalkeeper">Goalkeeper</option>
+            <option value="Center-back">Center-back</option>
+            <option value="Full-back">Full-back</option>
+            <option value="Midfielder">Midfielder</option>
+            <option value="Striker">Striker</option>
+            <option value="Winger">Winger</option>
+        </select>
+
+        <select class="form-input" id="countryFilter">
+            <option value="">All Countries</option>
+            <option value="India">India</option>
+            <option value="Spain">Spain</option>
+            <option value="England">England</option>
+            <option value="Australia">Australia</option>
+            <option value="France">France</option>
+        </select>
+
+        <button class="btn" id="resetFilters" type="button">Reset</button>
+    </div>
+
+    <!-- CRICKET TABLE -->
+    <div class="table-section" id="cricket-section">
+        <p class="section-title">
+            Cricket Players
+            <span class="row-count" id="cricket-count">{{ cricket_players|length }}</span>
+        </p>
+
+        <div class="glass-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Date of Birth</th>
+                        <th>Position</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody id="cricket-body">
+                    {% for p in cricket_players %}
+                    <tr class="player-row" data-sport="cricket">
+                        <td>{{ p[0] }}</td>
+                        <td>{{ p[1] }}</td>
+                        <td>{{ p[2] }}</td>
+                        <td><span class="badge blue">{{ p[3] }}</span></td>
+                        <td><span class="country-pill">{{ p[4] }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr class="empty-row">
+                        <td colspan="5">
+                            <div class="empty-state">No cricket players registered yet.</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FOOTBALL TABLE -->
+    <div class="table-section" id="football-section">
+        <p class="section-title">
+            Football Players
+            <span class="row-count" id="football-count">{{ football_players|length }}</span>
+        </p>
+
+        <div class="glass-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Date of Birth</th>
+                        <th>Position</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody id="football-body">
+                    {% for p in football_players %}
+                    <tr class="player-row" data-sport="football">
+                        <td>{{ p[0] }}</td>
+                        <td>{{ p[1] }}</td>
+                        <td>{{ p[2] }}</td>
+                        <td><span class="badge green">{{ p[3] }}</span></td>
+                        <td><span class="country-pill">{{ p[4] }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr class="empty-row">
+                        <td colspan="5">
+                            <div class="empty-state">No football players registered yet.</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    /* ── Typewriter ── */
+    const textView = "PLAYER DATABASE";
+    let idxView = 0;
+    const targetView = document.getElementById("type-text-view");
+    (function type() {
+        if (idxView < textView.length) {
+            targetView.textContent += textView.charAt(idxView++);
+            setTimeout(type, 50);
+        }
+    })();
+
+    /* ── Format DOB: YYYY-MM-DD → D Month YYYY ── */
+    const MONTHS = [
+        'January','February','March','April','May','June',
+        'July','August','September','October','November','December'
+    ];
+    document.querySelectorAll('.player-row').forEach(row => {
+        const cell = row.children[2];
+        if (!cell) return;
+        const parts = cell.textContent.trim().split('-');
+        if (parts.length === 3) {
+            const [y, m, d] = parts;
+            cell.textContent = `${parseInt(d)} ${MONTHS[parseInt(m) - 1]} ${y}`;
+        }
+    });
+
+    /* ── Filter logic ── */
+    const searchInput    = document.getElementById("searchInput");
+    const cricketFilter  = document.getElementById("cricketFilter");
+    const footballFilter = document.getElementById("footballFilter");
+    const countryFilter  = document.getElementById("countryFilter");
+    const allRows        = document.querySelectorAll(".player-row");
+    const cricketCount   = document.getElementById("cricket-count");
+    const footballCount  = document.getElementById("football-count");
+
+    function updateCount() {
+        let c = 0, f = 0;
+        allRows.forEach(row => {
+            if (row.style.display !== "none") {
+                if (row.dataset.sport === "cricket") c++;
+                else f++;
+            }
+        });
+        cricketCount.textContent = c;
+        footballCount.textContent = f;
+    }
+
+    function filterTable() {
+        const sv = searchInput.value.toLowerCase().trim();
+        const cv = cricketFilter.value.toLowerCase();
+        const fv = footballFilter.value.toLowerCase();
+        const kv = countryFilter.value.toLowerCase();
+
+        allRows.forEach(row => {
+            const text     = row.innerText.toLowerCase();
+            const position = row.children[3].innerText.toLowerCase();
+            const country  = row.children[4].innerText.toLowerCase();
+
+            const matchSearch  = !sv || text.includes(sv);
+            const matchCricket = !cv || position.includes(cv);
+            const matchFball   = !fv || position.includes(fv);
+            const matchCountry = !kv || country.includes(kv);
+
+            row.style.display = (matchSearch && matchCricket && matchFball && matchCountry) ? "" : "none";
+        });
+
+        updateCount();
+    }
+
+    searchInput.addEventListener("input", filterTable);
+    cricketFilter.addEventListener("change", filterTable);
+    footballFilter.addEventListener("change", filterTable);
+    countryFilter.addEventListener("change", filterTable);
+
+    document.getElementById("resetFilters").addEventListener("click", () => {
+        searchInput.value = "";
+        cricketFilter.value = "";
+        footballFilter.value = "";
+        countryFilter.value = "";
+        filterTable();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends "layout.html" %}
+
+{% block title %}Sports League Management System{% endblock %}
+
+{% block head %}
+<style>
+/* ─── HERO: centered heading block ─── */
+.hero {
+    padding: 80px 60px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-header {
+    text-align: center;
+    padding-bottom: 88px;
+}
+
+.hero h1 {
+    font-size: 88px;
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: -1px;
+    font-feature-settings: 'liga' 0, 'ss02', 'ss08';
+    min-height: 96px;
+    margin-bottom: 24px;
+}
+
+.hero p {
+    font-size: 22px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    letter-spacing: 0.2px;
+    margin: 0 auto;
+    max-width: 680px;
+}
+
+/* Divider between heading and cards */
+.hero-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+    margin-bottom: 72px;
+    flex-shrink: 0;
+}
+
+/* ─── CARDS GRID — full width, 4 equal columns ─── */
+.features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 100%;
+    padding-bottom: 60px;
+}
+
+.card {
+    padding: 36px 32px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    box-shadow:
+        rgb(27,28,30) 0px 0px 0px 1px,
+        rgb(7,8,10) 0px 0px 0px 1px inset,
+        0 4px 24px rgba(0,0,0,0.3);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+/* Top-edge glass highlight */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.14);
+    box-shadow:
+        rgb(27,28,30) 0px 0px 0px 1px,
+        rgb(7,8,10) 0px 0px 0px 1px inset,
+        0 16px 48px rgba(0,0,0,0.5);
+}
+
+.card h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    letter-spacing: 0px;
+}
+
+.card p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    letter-spacing: 0.2px;
+    margin-bottom: 28px;
+}
+
+.card .btn {
+    align-self: start;
+    font-size: 16px;
+    padding: 11px 22px;
+}
+
+.card .btn.disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-header">
+        <h1 id="type-text" class="typewriter"></h1>
+        <p>A DBMS-based application to manage players, teams, matches, and sponsors across cricket and football leagues.</p>
+    </div>
+
+    <div class="hero-divider"></div>
+
+    <div class="features">
+
+        <div class="card">
+            <h3>Register Player</h3>
+            <p>Add new players into the system with sport, position, and country details.</p>
+            <a class="btn btn-primary" href="/player">Open</a>
+        </div>
+
+        <div class="card">
+            <h3>View Players</h3>
+            <p>Browse all registered cricket and football players with live search and filters.</p>
+            <a class="btn btn-primary" href="/view_players">Open</a>
+        </div>
+
+        <div class="card">
+            <h3>Manage Teams</h3>
+            <p>Create and manage teams participating in the league across sports.</p>
+            <span class="btn disabled">Coming Soon</span>
+        </div>
+
+        <div class="card">
+            <h3>Matches</h3>
+            <p>Schedule and track match details, results, and standings.</p>
+            <span class="btn disabled">Coming Soon</span>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const text   = "SPORTS LEAGUE MANAGEMENT SYSTEM";
+let   index  = 0;
+const target = document.getElementById("type-text");
+(function type() {
+    if (index < text.length) {
+        target.textContent += text.charAt(index++);
+        setTimeout(type, 45);
+    }
+})();
+</script>
+{% endblock %}
