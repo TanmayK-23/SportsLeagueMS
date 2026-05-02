@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+
+{% block title %}Tournaments — SLMS{% endblock %}
+
+{% block head %}
+<style>
+/* ─── HEADER ─── */
+.tourney-header {
+    padding: 80px 60px 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.tourney-header h1 {
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+}
+
+.tourney-header p {
+    font-size: 20px;
+    color: var(--text-secondary);
+    letter-spacing: 0.2px;
+}
+
+/* ─── GRID ─── */
+.tourney-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+    padding: 0 60px 80px;
+}
+
+.tourney-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 32px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    box-shadow:
+        rgb(27,28,30) 0px 0px 0px 1px,
+        rgb(7,8,10) 0px 0px 0px 1px inset,
+        0 4px 24px rgba(0,0,0,0.3);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.tourney-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+}
+
+.tourney-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow:
+        rgb(27,28,30) 0px 0px 0px 1px,
+        rgb(7,8,10) 0px 0px 0px 1px inset,
+        0 12px 40px rgba(0,0,0,0.45);
+}
+
+.tourney-name {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.tourney-meta {
+    font-size: 15px;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.meta-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-secondary);
+}
+
+.badge-level {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: rgba(255, 99, 99, 0.1);
+    color: #FF6363;
+    border: 1px solid rgba(255, 99, 99, 0.2);
+    margin-bottom: 16px;
+}
+
+.badge-level.pro {
+    background: rgba(85, 179, 255, 0.1);
+    color: #55b3ff;
+    border-color: rgba(85, 179, 255, 0.2);
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tourney-header">
+    <h1>Tournaments & Leagues</h1>
+    <p>Explore all the major competitions in the SLMS network.</p>
+    <div style="margin-top: 16px;">
+        <span style="color: var(--text-dim); font-size: 15px; text-transform: uppercase; letter-spacing: 1px;">{{ tournaments|length }} Competitions Total</span>
+    </div>
+</div>
+
+<div class="tourney-grid">
+    {% for t in tournaments %}
+    <a href="/tournaments/{{ t[0] }}" class="tourney-card">
+        {% if 'Professional' in t[2] or 'Pro' in t[2] %}
+            <div class="badge-level pro">{{ t[2] }}</div>
+        {% else %}
+            <div class="badge-level">{{ t[2] }}</div>
+        {% endif %}
+        
+        <div class="tourney-name">{{ t[1] }}</div>
+        
+        <div class="tourney-meta">
+            <div class="meta-item">
+                <div class="meta-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                    <span style="display: block; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Organizer</span>
+                    <span style="color: var(--text-primary); font-weight: 500;">{{ t[3] }}</span>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% else %}
+    <div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--text-secondary); background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid var(--border);">
+        No tournaments found in the database.
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

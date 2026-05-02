@@ -1,0 +1,227 @@
+{% extends "layout.html" %}
+
+{% block title %}Match Fixture #{{ match.id }} — SLMS{% endblock %}
+
+{% block head %}
+<style>
+/* ─── SCOREBOARD HERO ─── */
+.sb-wrap {
+    padding: 80px 60px 60px;
+    background: linear-gradient(180deg, rgba(85,179,255,0.02) 0%, transparent 100%);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 60px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 40px;
+    transition: color 0.2s;
+}
+.back-link:hover { color: var(--text-primary); }
+
+.scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.sb-team {
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+.sb-team.home { text-align: right; }
+.sb-team.away { text-align: left; }
+
+.sb-score {
+    font-size: 64px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'GeistMono', monospace;
+    background: #07080a;
+    padding: 16px 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 
+        0 8px 32px rgba(0,0,0,0.4),
+        0 0 0 1px inset rgba(255,255,255,0.05);
+}
+
+.sb-meta {
+    text-align: center;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.sb-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+/* ─── TIMELINE ─── */
+.section-wrap {
+    padding: 0 60px 80px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 40px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 15px;
+    width: 2px;
+    background: var(--border-strong);
+}
+
+.event-item {
+    position: relative;
+    margin-bottom: 32px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.event-item::before {
+    content: '';
+    position: absolute;
+    top: 24px; left: -31px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    border: 3px solid #07080a;
+    box-shadow: 0 0 0 1px var(--border);
+}
+
+.event-item.goal::before { background: var(--accent-green); }
+.event-item.wicket::before { background: #FF6363; }
+
+.ev-min {
+    font-size: 14px;
+    font-family: 'GeistMono', monospace;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+}
+
+.ev-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.ev-player {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sb-wrap">
+    <a href="/matches" class="back-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Fixtures
+    </a>
+
+    <div class="scoreboard">
+        {% if match.teams|length >= 2 %}
+            <div class="sb-team home">{{ match.teams[0].name }}</div>
+            <div class="sb-score">
+                {{ match.teams[0].score if match.teams[0].score is not none else '-' }} : {{ match.teams[1].score if match.teams[1].score is not none else '-' }}
+            </div>
+            <div class="sb-team away">{{ match.teams[1].name }}</div>
+        {% else %}
+            <div class="sb-score">Match #{{ match.id }}</div>
+        {% endif %}
+    </div>
+
+    <div class="sb-meta">
+        <div class="sb-meta-item date-cell">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            {{ match.date }}
+        </div>
+        <div class="sb-meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {{ match.venue }}
+        </div>
+        <div class="sb-meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            {% if match.referee %}Ref: {{ match.referee }}{% else %}Official TBD{% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="section-wrap">
+    <h3 class="section-title">Goal Scorers</h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px;">
+        <!-- Home Scorers -->
+        <div style="text-align: right;">
+            <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">{{ match.teams[0].name }}</div>
+            {% if match.teams[0].scorers %}
+                {% for scorer in match.teams[0].scorers.split(',') %}
+                    <div style="font-size: 16px; color: var(--text-secondary); margin-bottom: 8px;">⚽ {{ scorer.strip() }}</div>
+                {% endfor %}
+            {% else %}
+                <div style="color: var(--text-dim); font-size: 14px;">No goals</div>
+            {% endif %}
+        </div>
+        
+        <!-- Away Scorers -->
+        <div style="text-align: left;">
+            <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">{{ match.teams[1].name }}</div>
+            {% if match.teams[1].scorers %}
+                {% for scorer in match.teams[1].scorers.split(',') %}
+                    <div style="font-size: 16px; color: var(--text-secondary); margin-bottom: 8px;">⚽ {{ scorer.strip() }}</div>
+                {% endfor %}
+            {% else %}
+                <div style="color: var(--text-dim); font-size: 14px;">No goals</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    /* ── Format DOB: YYYY-MM-DD → D Month YYYY ── */
+    const MONTHS = [
+        'January','February','March','April','May','June',
+        'July','August','September','October','November','December'
+    ];
+    document.querySelectorAll('.date-cell').forEach(cell => {
+        // Only format if there's actual text
+        const textNode = Array.from(cell.childNodes).find(n => n.nodeType === 3 && n.textContent.trim().length > 0);
+        if (textNode) {
+            const parts = textNode.textContent.trim().split('-');
+            if (parts.length === 3) {
+                const [y, m, d] = parts;
+                textNode.textContent = ` ${parseInt(d)} ${MONTHS[parseInt(m) - 1]} ${y}`;
+            }
+        }
+    });
+</script>
+{% endblock %}

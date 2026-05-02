@@ -4,95 +4,107 @@
 
 {% block head %}
 <style>
-/* Full-width container, no centering */
-.container {
-    padding: 52px 60px 40px;
-}
+    /* Full-width container, no centering */
+    .container {
+        padding: 80px 60px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
 
-h1.page-heading {
-    font-size: 56px;
-    font-weight: 600;
-    line-height: 1.08;
-    letter-spacing: 0px;
-    margin-bottom: 8px;
-}
+    h1.page-heading {
+        font-size: 56px;
+        font-weight: 600;
+        line-height: 1.08;
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+    }
 
-.page-subtitle {
-    font-size: 18px;
-    color: var(--text-secondary);
-    margin-bottom: 40px;
-    letter-spacing: 0.2px;
-}
+    .page-subtitle {
+        font-size: 20px;
+        color: var(--text-secondary);
+        margin-bottom: 40px;
+        letter-spacing: 0.2px;
+    }
 
-/* ─── CONTROLS ─── */
-.controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 36px;
-    align-items: center;
-}
+    /* ─── CONTROLS ─── */
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 36px;
+        align-items: center;
+        width: 100%;
+    }
 
-.controls .form-input {
-    flex: 1;
-    min-width: 200px;
-}
+    .controls .form-input {
+        flex: 1;
+        min-width: 200px;
+    }
 
-.controls select.form-input {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239c9c9d' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-}
+    .controls select.form-input {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239c9c9d' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px;
+    }
 
-.controls .btn { flex-shrink: 0; }
+    .controls .btn {
+        flex-shrink: 0;
+    }
 
-/* ─── TABLE SECTIONS ─── */
-.table-section {
-    margin-bottom: 48px;
-}
+    /* ─── TABLE SECTIONS ─── */
+    .table-section {
+        margin-bottom: 48px;
+        width: 100%;
+        text-align: left;
+    }
 
-.empty-state {
-    text-align: center;
-    padding: 52px 20px;
-    color: var(--text-dim);
-    font-size: 17px;
-}
+    .empty-state {
+        text-align: center;
+        padding: 52px 20px;
+        color: var(--text-dim);
+        font-size: 17px;
+    }
 
-/* ID col — muted */
-.glass-table-wrap tbody td:first-child {
-    color: var(--text-dim);
-    font-size: 14px;
-    font-weight: 400;
-}
+    /* ID col — muted */
+    .glass-table-wrap tbody td:first-child {
+        color: var(--text-dim);
+        font-size: 14px;
+        font-weight: 400;
+    }
 
-.country-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 16px;
-    color: var(--text-secondary);
-}
+    .country-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 16px;
+        color: var(--text-secondary);
+    }
 
-/* Live row-count chip */
-.row-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    padding: 0 7px;
-    border-radius: 5px;
-    font-size: 13px;
-    font-weight: 600;
-    background: var(--surface-card);
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-    margin-left: 8px;
-    vertical-align: middle;
-}
+    /* Live row-count chip */
+    .row-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 24px;
+        height: 24px;
+        padding: 0 7px;
+        border-radius: 5px;
+        font-size: 13px;
+        font-weight: 600;
+        background: var(--surface-card);
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        margin-left: 8px;
+        vertical-align: middle;
+    }
 </style>
 {% endblock %}
 
@@ -218,7 +230,7 @@ h1.page-heading {
 {% block scripts %}
 <script>
     /* ── Typewriter ── */
-    const textView = "PLAYER DATABASE";
+    const textView = "Player Database";
     let idxView = 0;
     const targetView = document.getElementById("type-text-view");
     (function type() {
@@ -230,8 +242,8 @@ h1.page-heading {
 
     /* ── Format DOB: YYYY-MM-DD → D Month YYYY ── */
     const MONTHS = [
-        'January','February','March','April','May','June',
-        'July','August','September','October','November','December'
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
     ];
     document.querySelectorAll('.player-row').forEach(row => {
         const cell = row.children[2];
@@ -244,13 +256,13 @@ h1.page-heading {
     });
 
     /* ── Filter logic ── */
-    const searchInput    = document.getElementById("searchInput");
-    const cricketFilter  = document.getElementById("cricketFilter");
+    const searchInput = document.getElementById("searchInput");
+    const cricketFilter = document.getElementById("cricketFilter");
     const footballFilter = document.getElementById("footballFilter");
-    const countryFilter  = document.getElementById("countryFilter");
-    const allRows        = document.querySelectorAll(".player-row");
-    const cricketCount   = document.getElementById("cricket-count");
-    const footballCount  = document.getElementById("football-count");
+    const countryFilter = document.getElementById("countryFilter");
+    const allRows = document.querySelectorAll(".player-row");
+    const cricketCount = document.getElementById("cricket-count");
+    const footballCount = document.getElementById("football-count");
 
     function updateCount() {
         let c = 0, f = 0;
@@ -271,13 +283,13 @@ h1.page-heading {
         const kv = countryFilter.value.toLowerCase();
 
         allRows.forEach(row => {
-            const text     = row.innerText.toLowerCase();
+            const text = row.innerText.toLowerCase();
             const position = row.children[3].innerText.toLowerCase();
-            const country  = row.children[4].innerText.toLowerCase();
+            const country = row.children[4].innerText.toLowerCase();
 
-            const matchSearch  = !sv || text.includes(sv);
+            const matchSearch = !sv || text.includes(sv);
             const matchCricket = !cv || position.includes(cv);
-            const matchFball   = !fv || position.includes(fv);
+            const matchFball = !fv || position.includes(fv);
             const matchCountry = !kv || country.includes(kv);
 
             row.style.display = (matchSearch && matchCricket && matchFball && matchCountry) ? "" : "none";

@@ -1,0 +1,181 @@
+{% extends "layout.html" %}
+
+{% block title %}Match Officials — SLMS{% endblock %}
+
+{% block head %}
+<style>
+.ref-header {
+    padding: 80px 60px 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.ref-header h1 {
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+}
+
+.ref-header p {
+    font-size: 20px;
+    color: var(--text-secondary);
+    letter-spacing: 0.2px;
+}
+
+/* ─── LEAGUE GRID ─── */
+.leagues-grid {
+    padding: 0 60px 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.league-card {
+    display: flex;
+    flex-direction: column;
+    padding: 36px 32px;
+    border-radius: 16px;
+    background: rgba(16, 17, 17, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    box-shadow:
+        rgb(27,28,30) 0px 0px 0px 1px,
+        rgb(7,8,10) 0px 0px 0px 1px inset,
+        0 4px 12px rgba(0,0,0,0.2);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* Coloured top accent bar */
+.league-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    opacity: 0.7;
+    border-radius: 16px 16px 0 0;
+    transition: opacity 0.22s;
+}
+
+.league-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255,255,255,0.14);
+    box-shadow:
+        rgb(27,28,30) 0px 0px 0px 1px,
+        rgb(7,8,10) 0px 0px 0px 1px inset,
+        0 16px 40px rgba(0,0,0,0.4);
+}
+
+.league-card:hover::before { opacity: 1; }
+
+.league-emoji {
+    font-size: 40px;
+    margin-bottom: 20px;
+    line-height: 1;
+}
+
+.league-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+}
+
+.league-sport-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    background: var(--accent-faint);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+}
+
+.league-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.league-count {
+    font-size: 14px;
+    color: var(--text-dim);
+}
+
+.league-arrow {
+    color: var(--text-dim);
+    transition: transform 0.2s, color 0.2s;
+}
+
+.league-card:hover .league-arrow {
+    transform: translateX(4px);
+    color: var(--text-primary);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ref-header">
+    <h1>Match Officials</h1>
+    <p>Referees & umpires across all leagues and competitions.</p>
+    <div style="margin-top: 16px;">
+        <span style="color: var(--text-dim); font-size: 15px; text-transform: uppercase; letter-spacing: 1px;">{{ leagues|length }} Leagues Total</span>
+    </div>
+</div>
+
+<div class="leagues-grid">
+    {% for league in leagues %}
+    {% if league.id == 'la-liga' %}
+        {% set accent = '#e63946' %}
+        {% set accent_faint = 'rgba(230,57,70,0.1)' %}
+        {% set accent_border = 'rgba(230,57,70,0.25)' %}
+    {% elif league.id == 'premier-league' %}
+        {% set accent = '#9b59b6' %}
+        {% set accent_faint = 'rgba(155,89,182,0.1)' %}
+        {% set accent_border = 'rgba(155,89,182,0.25)' %}
+    {% elif league.id == 'ucl' %}
+        {% set accent = '#55b3ff' %}
+        {% set accent_faint = 'rgba(85,179,255,0.1)' %}
+        {% set accent_border = 'rgba(85,179,255,0.25)' %}
+    {% else %}
+        {% set accent = '#f5a623' %}
+        {% set accent_faint = 'rgba(245,166,35,0.1)' %}
+        {% set accent_border = 'rgba(245,166,35,0.25)' %}
+    {% endif %}
+
+    <a href="/referees/{{ league.id }}" class="league-card"
+       style="--accent: {{ accent }}; --accent-faint: {{ accent_faint }}; --accent-border: {{ accent_border }}">
+
+        <div class="league-name">{{ league.name }}</div>
+        <span class="league-sport-badge">{{ league.sport }}</span>
+        <div class="league-footer">
+            <span class="league-count">{{ league.count }} {{ league.type }}</span>
+            <svg class="league-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

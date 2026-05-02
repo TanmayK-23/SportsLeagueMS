@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ league.name }} Officials — SLMS{% endblock %}
+
+{% block head %}
+<style>
+.league-detail-header {
+    padding: 100px 60px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.header-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+    margin-bottom: 4px;
+}
+.back-link:hover { color: var(--text-primary); }
+.league-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+.league-detail-header h1 {
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+.sport-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.sport-tag.cricket {
+    background: rgba(245, 166, 35, 0.12);
+    color: #f5a623;
+    border: 1px solid rgba(245, 166, 35, 0.25);
+}
+
+.sport-tag.football {
+    background: rgba(85, 179, 255, 0.12);
+    color: #55b3ff;
+    border: 1px solid rgba(85, 179, 255, 0.25);
+}
+/* ─── OFFICIALS GRID ─── */
+.officials-grid {
+    padding: 0 60px 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.official-card {
+    padding: 28px 28px;
+    border-radius: 14px;
+    background: rgba(16, 17, 17, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    box-shadow:
+        rgb(27,28,30) 0px 0px 0px 1px,
+        rgb(7,8,10) 0px 0px 0px 1px inset,
+        0 4px 12px rgba(0,0,0,0.2);
+    transition: transform 0.22s ease, border-color 0.22s ease;
+    position: relative;
+    overflow: hidden;
+}
+.official-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+}
+.official-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.12);
+}
+.official-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+.official-level {
+    display: inline-block;
+    padding: 4px 11px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+.level-elite {
+    background: rgba(95, 201, 146, 0.12);
+    color: #5fc992;
+    border: 1px solid rgba(95, 201, 146, 0.25);
+}
+.level-fifa {
+    background: rgba(85, 179, 255, 0.12);
+    color: #55b3ff;
+    border: 1px solid rgba(85, 179, 255, 0.25);
+}
+.level-icc {
+    background: rgba(245, 166, 35, 0.12);
+    color: #f5a623;
+    border: 1px solid rgba(245, 166, 35, 0.25);
+}
+.level-national {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+.official-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 4px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="league-detail-header">
+    <div class="header-left">
+        <a href="/referees" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Officials
+        </a>
+        <div class="league-title">
+            <h1>{{ league.name }}</h1>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <span class="sport-tag {% if league.sport == 'Cricket' %}cricket{% else %}football{% endif %}">
+                {{ league.sport }}
+            </span>
+            <span style="color: var(--text-dim); font-size: 15px; text-transform: uppercase; letter-spacing: 1px;">
+                {{ league.officials|length }} Registered {{ league.type }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="officials-grid">
+    {% for o in league.officials %}
+    <div class="official-card">
+        <div class="official-name">{{ o.name }}</div>
+        {% if 'Elite' in o.level %}
+            <span class="official-level level-elite">{{ o.level }}</span>
+        {% elif 'FIFA' in o.level or 'ICC' in o.level %}
+            <span class="official-level level-fifa">{{ o.level }}</span>
+        {% elif 'BCCI' in o.level %}
+            <span class="official-level level-icc">{{ o.level }}</span>
+        {% else %}
+            <span class="official-level level-national">{{ o.level }}</span>
+        {% endif %}
+        <div class="official-meta">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            {{ o.country }}
+            <span style="color: var(--text-dim); margin-left: auto; font-size: 12px; text-transform: uppercase; letter-spacing: 0.3px;">{{ o.role }}</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

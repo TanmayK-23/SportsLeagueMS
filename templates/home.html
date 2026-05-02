@@ -4,169 +4,207 @@
 
 {% block head %}
 <style>
-/* ─── HERO: centered heading block ─── */
-.hero {
-    padding: 80px 60px 0;
-    display: flex;
-    flex-direction: column;
-}
+    /* ─── HERO: centered heading block ─── */
+    .hero {
+        padding: 80px 60px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
 
-.hero-header {
-    text-align: center;
-    padding-bottom: 88px;
-}
+    .hero-header {
+        text-align: center;
+        padding-bottom: 88px;
+        width: 100%;
+    }
 
-.hero h1 {
-    font-size: 88px;
-    font-weight: 600;
-    line-height: 1.06;
-    letter-spacing: -1px;
-    font-feature-settings: 'liga' 0, 'ss02', 'ss08';
-    min-height: 96px;
-    margin-bottom: 24px;
-}
+    .hero h1 {
+        font-size: 56px;
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+        margin-bottom: 24px;
+    }
 
-.hero p {
-    font-size: 22px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    letter-spacing: 0.2px;
-    margin: 0 auto;
-    max-width: 680px;
-}
+    .hero p {
+        font-size: 22px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        letter-spacing: 0.2px;
+        margin: 0 auto;
+        max-width: 680px;
+    }
 
-/* Divider between heading and cards */
-.hero-divider {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
-    margin-bottom: 72px;
-    flex-shrink: 0;
-}
+    /* Divider between heading and cards */
+    .hero-divider {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+        margin-bottom: 72px;
+        flex-shrink: 0;
+    }
 
-/* ─── CARDS GRID — full width, 4 equal columns ─── */
-.features {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    width: 100%;
-    padding-bottom: 60px;
-}
+    /* ─── CARDS GRID — 3 columns for 6 cards ─── */
+    .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        width: 100%;
+        padding-bottom: 80px;
+    }
 
-.card {
-    padding: 36px 32px;
-    border-radius: 16px;
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--border);
-    box-shadow:
-        rgb(27,28,30) 0px 0px 0px 1px,
-        rgb(7,8,10) 0px 0px 0px 1px inset,
-        0 4px 24px rgba(0,0,0,0.3);
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-    position: relative;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-}
+    .card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        padding: 40px 36px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow:
+            0 4px 24px rgba(0, 0, 0, 0.3),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
 
-/* Top-edge glass highlight */
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
-}
+    /* Top-edge glass highlight */
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+    }
 
-.card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255,255,255,0.14);
-    box-shadow:
-        rgb(27,28,30) 0px 0px 0px 1px,
-        rgb(7,8,10) 0px 0px 0px 1px inset,
-        0 16px 48px rgba(0,0,0,0.5);
-}
+    .card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 99, 99, 0.25);
+        box-shadow:
+            rgb(27, 28, 30) 0px 0px 0px 1px,
+            rgb(7, 8, 10) 0px 0px 0px 1px inset,
+            0 16px 48px rgba(0, 0, 0, 0.5),
+            0 0 40px rgba(255, 99, 99, 0.06);
+    }
 
-.card h3 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 14px;
-    letter-spacing: 0px;
-}
+    .card h3 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 14px;
+        letter-spacing: 0px;
+    }
 
-.card p {
-    font-size: 18px;
-    color: var(--text-secondary);
-    line-height: 1.65;
-    letter-spacing: 0.2px;
-    margin-bottom: 28px;
-}
+    .card p {
+        font-size: 18px;
+        color: var(--text-secondary);
+        line-height: 1.65;
+        letter-spacing: 0.2px;
+        margin: 0;
+    }
 
-.card .btn {
-    align-self: start;
-    font-size: 16px;
-    padding: 11px 22px;
-}
+    .card .card-arrow {
+        position: absolute;
+        top: 32px;
+        right: 28px;
+        color: var(--text-dim);
+        opacity: 0;
+        transform: translateX(-4px);
+        transition: opacity 0.25s, transform 0.25s;
+    }
 
-.card .btn.disabled {
-    opacity: 0.32;
-    cursor: not-allowed;
-    pointer-events: none;
-}
+    .card:hover .card-arrow {
+        opacity: 1;
+        transform: translateX(0);
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="hero">
     <div class="hero-header">
-        <h1 id="type-text" class="typewriter"></h1>
-        <p>A DBMS-based application to manage players, teams, matches, and sponsors across cricket and football leagues.</p>
+        <h1>SPORTS LEAGUE MANAGEMENT <br> SYSTEM</h1>
+        <p>A DBMS-based application to manage players, teams, matches, and sponsors across cricket and football leagues.
+        </p>
     </div>
 
     <div class="hero-divider"></div>
 
     <div class="features">
 
-        <div class="card">
+        <a class="card" href="/player">
+            <span class="card-arrow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </span>
             <h3>Register Player</h3>
             <p>Add new players into the system with sport, position, and country details.</p>
-            <a class="btn btn-primary" href="/player">Open</a>
-        </div>
+        </a>
 
-        <div class="card">
+        <a class="card" href="/view_players">
+            <span class="card-arrow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </span>
             <h3>View Players</h3>
             <p>Browse all registered cricket and football players with live search and filters.</p>
-            <a class="btn btn-primary" href="/view_players">Open</a>
-        </div>
+        </a>
 
-        <div class="card">
-            <h3>Manage Teams</h3>
-            <p>Create and manage teams participating in the league across sports.</p>
-            <span class="btn disabled">Coming Soon</span>
-        </div>
+        <a class="card" href="/tournaments">
+            <span class="card-arrow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </span>
+            <h3>Tournaments</h3>
+            <p>Explore all the major competitions in the SLMS network.</p>
+        </a>
 
-        <div class="card">
+        <a class="card" href="/matches">
+            <span class="card-arrow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </span>
             <h3>Matches</h3>
-            <p>Schedule and track match details, results, and standings.</p>
-            <span class="btn disabled">Coming Soon</span>
-        </div>
+            <p>Upcoming and past matches across all leagues.</p>
+        </a>
+
+        <a class="card" href="/teams">
+            <span class="card-arrow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </span>
+            <h3>Teams</h3>
+            <p>Explore professional clubs and rosters across the network.</p>
+        </a>
+
+        <a class="card" href="/referees">
+            <span class="card-arrow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </span>
+            <h3>Officials</h3>
+            <p>Browse referees and umpires for all active leagues.</p>
+        </a>
 
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-const text   = "SPORTS LEAGUE MANAGEMENT SYSTEM";
-let   index  = 0;
-const target = document.getElementById("type-text");
-(function type() {
-    if (index < text.length) {
-        target.textContent += text.charAt(index++);
-        setTimeout(type, 45);
-    }
-})();
-</script>
 {% endblock %}
