@@ -382,6 +382,16 @@
                 <a href="/teams" {% if active_page=='teams' %}class="active" {% endif %}>Teams</a>
                 <a href="/matches" {% if active_page=='matches' %}class="active" {% endif %}>Matches</a>
                 <a href="/referees" {% if active_page=='referees' %}class="active" {% endif %}>Referees</a>
+                {% if is_admin %}
+                <a href="/admin/dashboard" {% if active_page=='admin' %}class="active" {% endif %}
+                    style="color: #FF6363; display: inline-flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    Admin
+                </a>
+                {% endif %}
             </div>
         </nav>
     </div>

@@ -1,8 +1,11 @@
-#usage: source venv/bin/activate , pyhton app.py
-from flask import Flask, render_template, request, redirect, url_for
+#usage: source venv/bin/activate , python app.py
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from functools import wraps
 import mysql.connector
+import bcrypt
 
 app = Flask(__name__)
+app.secret_key = 'slms_secret_key_2026'  # Required for Flask sessions
 
 # 🔗 Database Connection
 db = mysql.connector.connect(
@@ -14,20 +17,36 @@ db = mysql.connector.connect(
 
 cursor = db.cursor()
 
+# 🔒 Login Required Decorator
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'admin_logged_in' not in session:
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated
+
+# 🌐 Inject is_admin into all templates
+@app.context_processor
+def inject_admin_status():
+    return dict(is_admin=session.get('admin_logged_in', False))
+
 # 🏠 Home Page
 @app.route('/')
 def home():
     return render_template('home.html', active_page='home')
 
-# 🧾 Player Registration Page
+# 🧾 Player Registration Page (Protected)
 @app.route('/player')
+@login_required
 def player():
     cursor.execute("SELECT country_id, country_name FROM Country")
     countries = cursor.fetchall()
     return render_template('player.html', countries=countries, active_page='player')
 
-# ➕ Insert Player
+# ➕ Insert Player (Protected)
 @app.route('/insert_player', methods=['POST'])
+@login_required
 def insert_player():
     try:
         player_name = request.form['player_name']
@@ -320,6 +339,45 @@ def team_detail(team_name):
         return render_template('team_detail.html', team=team_info, active_page='')
     except Exception as e:
         return f"Error fetching team details: {str(e)}"
+
+# 🔐 Admin Login Page
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if 'admin_logged_in' in session:
+        return redirect(url_for('admin_dashboard'))
+
+    error = None
+    if request.method == 'POST':
+        username = request.form.get('username', '')
+        password = request.form.get('password', '')
+
+        try:
+            cursor.execute("SELECT password_hash FROM Admin_Users WHERE username = %s", (username,))
+            result = cursor.fetchone()
+
+            if result and bcrypt.checkpw(password.encode('utf-8'), result[0].encode('utf-8')):
+                session['admin_logged_in'] = True
+                session['admin_username'] = username
+                return redirect(url_for('admin_dashboard'))
+            else:
+                error = 'Invalid username or password.'
+        except Exception as e:
+            error = f'Login error: {str(e)}'
+
+    return render_template('admin_login.html', error=error)
+
+# 🔐 Admin Dashboard
+@app.route('/admin/dashboard')
+@login_required
+def admin_dashboard():
+    return render_template('admin_dashboard.html', active_page='admin')
+
+# 🔐 Admin Logout
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_logged_in', None)
+    session.pop('admin_username', None)
+    return redirect(url_for('home'))
 
 # 🚀 Run App
 if __name__ == '__main__':
